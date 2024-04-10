@@ -1,7 +1,11 @@
 package dictionary;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /** PrefixTree class, implements Dictionary interface.
  *  Can be used as a spell checker. */
@@ -33,6 +37,16 @@ public class PrefixTree implements Dictionary {
     public PrefixTree(String filename) {
         // FILL IN CODE:
         // Read each word from the file, add it to the tree
+        try(BufferedReader br = new BufferedReader(new FileReader(filename))){
+            String str;
+            while((str = br.readLine()) != null){
+
+            }
+        }catch(IOException e){
+            System.out.println(e);
+        }
+
+
 
     }
 
@@ -104,12 +118,17 @@ public class PrefixTree implements Dictionary {
         if (word.isEmpty()) {
             // FILL IN CODE
             // This is the node where this word "ends"
+            node.isWord = true;
             return;
         }
         int index = (int) word.charAt(0) - (int) 'a'; // index of the child that corresponds to the first letter in s
         // FILL IN CODE
         // If this child is null, point it to a new Node
         // Call add recursively (decide which word to pass, and in which subtree you want to insert it)
+        if(node.children[index] == null){
+            node.children[index].isWord = false;
+        }
+        add(word.substring(1), node.children[index]);
     }
 
 
