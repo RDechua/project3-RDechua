@@ -126,8 +126,9 @@ public class PrefixTree implements Dictionary {
         // If this child is null, point it to a new Node
         // Call add recursively (decide which word to pass, and in which subtree you want to insert it)
         if(node.children[index] == null){
-            node.children[index].isWord = false;
+            node.children[index] = new Node();
         }
+        System.out.println(word + " " + node.children[index].isWord);
         add(word.substring(1), node.children[index]);
     }
 
@@ -148,7 +149,18 @@ public class PrefixTree implements Dictionary {
         // Must be recursive
         // FILL IN CODE
 
-        return false;
+        if(node == null){
+            return false;
+        }
+        if(word.isEmpty()){
+            if(!node.isWord){
+                return false;
+            }else{
+                return true;
+            }
+        }
+        index = (int) word.charAt(0) - (int) 'a';
+        return check(word.substring(1), node.children[index]);
     }
 
     /**
@@ -196,6 +208,15 @@ public class PrefixTree implements Dictionary {
         // Print * if isWord is true for the child at index i
         // Append a new line character (you can use System.lineSeparator())
         // Make a recursive call on the same method and append the result to sb
+        for(int i = 0; i < 26; i++){
+            if(node.children[i] != null){
+                sb.append((char) ('a' + i));
+            }
+            if(node.children[i].isWord){
+                sb.append('*');
+            }
+
+        }
 
 
         return sb.toString();
