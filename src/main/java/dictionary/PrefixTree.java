@@ -210,15 +210,19 @@ public class PrefixTree implements Dictionary {
         // Make a recursive call on the same method and append the result to sb
         for(int i = 0; i < 26; i++){
             if(node.children[i] != null){
+                for(int j = 0; j < numIndentations; j++){
+                    sb.append(" ");
+                }
                 sb.append((char) ('a' + i));
-            }
-            if(node.children[i].isWord){
-                sb.append('*');
+                if(node.children[i].isWord){
+                    sb.append('*');
+                }
+                sb.append('\n');
+
+                sb.append(toString(node.children[i], numIndentations+1));
             }
 
         }
-
-
         return sb.toString();
     }
 }
