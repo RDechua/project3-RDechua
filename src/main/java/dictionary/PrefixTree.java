@@ -37,7 +37,7 @@ public class PrefixTree implements Dictionary {
     public PrefixTree(String filename) {
         // FILL IN CODE:
         // Read each word from the file, add it to the tree
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) { // Go through each line in the file and add it into the tree
             String str;
             root = new Node();
             while ((str = br.readLine()) != null) {
@@ -95,12 +95,12 @@ public class PrefixTree implements Dictionary {
         if (check(word)) {
             suggestions.add(word);
         }else {
-            Node lCPN = longestCommonPrefixNode(word);
-            while (!checkPrefix(word.substring(0, i))) {
+            while (!checkPrefix(word.substring(0, i))) { // Finds the longest common prefix
                 i--;
             }
             String prefix = word.substring(0, i);
-            findWordsBelowNode(lCPN, prefix, suggestions);
+            Node lCPN = longestCommonPrefixNode(word); // Finds node of the longest common prefix
+            findWordsBelowNode(lCPN, prefix, suggestions); // Adds the words below node onto the list
         }
         return suggestions;
     }
@@ -108,23 +108,23 @@ public class PrefixTree implements Dictionary {
     private Node longestCommonPrefixNode(String word){
         if (checkPrefix(word)) {
             Node node = root;
-            for (int i = 0; i < word.length(); i++) {
+            for (int i = 0; i < word.length(); i++) { // Finds the node of the longest common prefix
                 node = node.children[(int) word.charAt(i) - (int) 'a'];
             }
             return node;
         }
-        return longestCommonPrefixNode(word.substring(0, word.length() - 1));
+        return longestCommonPrefixNode(word.substring(0, word.length() - 1)); // Shortens the word until it finds the longest common prefix
     }
 
     public void findWordsBelowNode(Node node, String prefix, List<String> suggestions){
         if (node == null) {
             return;
         }
-        if (node.isWord) {
+        if (node.isWord) { // If it is a word, add into the list
             suggestions.add(prefix);
         }
         for (int i = 0; i < 26; i++) {
-            findWordsBelowNode(node.children[i], prefix + (char) ('a' + i), suggestions);
+            findWordsBelowNode(node.children[i], prefix + (char) ('a' + i), suggestions); // Starts at the longest common prefix node and checks all its children
         }
     }
     /** Return a string representation of the prefix tree.
@@ -179,7 +179,7 @@ public class PrefixTree implements Dictionary {
         if (node == null) {
             return false;
         }
-        if (word.isEmpty()) {
+        if (word.isEmpty()) { // If the method goes through all the characters, returns whether it's a word or not
             return node.isWord;
         }
         return check(word.substring(1), node.children[(int) word.charAt(0) - (int) 'a']);
@@ -209,7 +209,7 @@ public class PrefixTree implements Dictionary {
         if (prefix.isEmpty()) {
             return true;
         }
-        if (prefix.charAt(0) >= 'a') {
+        if (prefix.charAt(0) >= 'a') { // Ensures the prefix is valid
             if (node.children[(int) prefix.charAt(0) - (int) 'a'] == null) {
                 return false;
             }
@@ -240,11 +240,11 @@ public class PrefixTree implements Dictionary {
         // Make a recursive call on the same method and append the result to sb
         for (int i = 0; i < 26; i++) {
             if (node.children[i] != null) {
-                for (int j = 0; j < numIndentations; j++) {
+                for (int j = 0; j < numIndentations; j++) { // Adds indentation
                     sb.append(" ");
                 }
-                sb.append((char) ('a' + i));
-                if (node.children[i].isWord) {
+                sb.append((char) ('a' + i)); // Appends the character
+                if (node.children[i].isWord) { // Special character if it's a word
                     sb.append('*');
                 }
                 sb.append('\n');
