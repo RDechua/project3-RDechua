@@ -95,11 +95,31 @@ public class PrefixTree implements Dictionary {
         List<String> suggestions = new ArrayList<>();
         // Find a node with the longest common prefix (write a helper method)
        //  Find words below the "longest common prefix" node (write another helper method)
+        int i = word.length();
+        if(check(word)){
+            suggestions.add(word);
+        }else{
+            Node lCPN = longestCommonPrefixNode(word);
+        }
 
 
         return suggestions;
     }
 
+    public Node longestCommonPrefixNode(String word){
+        if(checkPrefix(word)){
+            Node node = root;
+            for(int i = 0; i < word.length(); i++){
+                node = node.children[(int) word.charAt(i) - (int) 'a'];
+            }
+            return node;
+        }
+        return longestCommonPrefixNode(word.substring(0, word.length() - 1));
+    }
+
+    public List<String> findWordsBelowNode(Node node, String prefix, List<String> suggestions){
+
+    }
     /** Return a string representation of the prefix tree.
      * See expectedDictionary1.txt and expectedTree_Small.txt to understand the format.
      * @return string, representing the tree.
