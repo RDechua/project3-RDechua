@@ -39,9 +39,11 @@ public class PrefixTree implements Dictionary {
         // Read each word from the file, add it to the tree
         try(BufferedReader br = new BufferedReader(new FileReader(filename))){
             String str;
+            root = new Node();
             while((str = br.readLine()) != null){
-
+                add(str, root);
             }
+
         }catch(IOException e){
             System.out.println(e);
         }
@@ -94,6 +96,7 @@ public class PrefixTree implements Dictionary {
         // Find a node with the longest common prefix (write a helper method)
        //  Find words below the "longest common prefix" node (write another helper method)
 
+
         return suggestions;
     }
 
@@ -128,7 +131,6 @@ public class PrefixTree implements Dictionary {
         if(node.children[index] == null){
             node.children[index] = new Node();
         }
-        System.out.println(word + " " + node.children[index].isWord);
         add(word.substring(1), node.children[index]);
     }
 
@@ -184,9 +186,18 @@ public class PrefixTree implements Dictionary {
     private boolean checkPrefix(String prefix, Node node) {
         // FILL IN CODE:
         // Must be recursive
+        if(prefix.isEmpty()){
+            return true;
+        }
+        if(prefix.charAt(0) >= 'a'){
+            if(node.children[(int) prefix.charAt(0) - (int) 'a'] == null){
+                return false;
+            }
+        }else{
+            return false;
+        }
 
-        return false;
-
+        return checkPrefix(prefix.substring(1), node.children[(int) prefix.charAt(0) - (int) 'a']);
     }
 
     /**
