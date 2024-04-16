@@ -37,19 +37,15 @@ public class PrefixTree implements Dictionary {
     public PrefixTree(String filename) {
         // FILL IN CODE:
         // Read each word from the file, add it to the tree
-        try(BufferedReader br = new BufferedReader(new FileReader(filename))){
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String str;
             root = new Node();
-            while((str = br.readLine()) != null){
+            while ((str = br.readLine()) != null) {
                 add(str, root);
             }
-
-        }catch(IOException e){
+        }catch (IOException e) {
             System.out.println(e);
         }
-
-
-
     }
 
     /** Adds a given word to the dictionary.
@@ -96,14 +92,11 @@ public class PrefixTree implements Dictionary {
         // Find a node with the longest common prefix (write a helper method)
        //  Find words below the "longest common prefix" node (write another helper method)
         int i = word.length();
-        if(check(word)){
+        if (check(word)) {
             suggestions.add(word);
-        }else{
+        }else {
             Node lCPN = longestCommonPrefixNode(word);
-            Node node = root;
-            String test = "";
-            while(!checkPrefix(word.substring(0, i))){
-                test = word.substring(0, i);
+            while (!checkPrefix(word.substring(0, i))) {
                 i--;
             }
             String prefix = word.substring(0, i);
@@ -112,10 +105,10 @@ public class PrefixTree implements Dictionary {
         return suggestions;
     }
 
-    public Node longestCommonPrefixNode(String word){
-        if(checkPrefix(word)){
+    private Node longestCommonPrefixNode(String word){
+        if (checkPrefix(word)) {
             Node node = root;
-            for(int i = 0; i < word.length(); i++){
+            for (int i = 0; i < word.length(); i++) {
                 node = node.children[(int) word.charAt(i) - (int) 'a'];
             }
             return node;
@@ -124,14 +117,14 @@ public class PrefixTree implements Dictionary {
     }
 
     public void findWordsBelowNode(Node node, String prefix, List<String> suggestions){
-        if(node == null){
+        if (node == null) {
             return;
         }
-        if(node.isWord){
+        if (node.isWord) {
             suggestions.add(prefix);
         }
-        for(int i = 0; i < 26; i++){
-            findWordsBelowNode(node.children[i], prefix + (char)((int)'a' + i), suggestions);
+        for (int i = 0; i < 26; i++) {
+            findWordsBelowNode(node.children[i], prefix + (char) ('a' + i), suggestions);
         }
     }
     /** Return a string representation of the prefix tree.
@@ -162,7 +155,7 @@ public class PrefixTree implements Dictionary {
         // FILL IN CODE
         // If this child is null, point it to a new Node
         // Call add recursively (decide which word to pass, and in which subtree you want to insert it)
-        if(node.children[index] == null){
+        if (node.children[index] == null) {
             node.children[index] = new Node();
         }
         add(word.substring(1), node.children[index]);
@@ -181,22 +174,15 @@ public class PrefixTree implements Dictionary {
      * @return true if the word is in the dictionary, false otherwise
      */
     private boolean check(String word, Node node) {
-        int index;
         // Must be recursive
         // FILL IN CODE
-
-        if(node == null){
+        if (node == null) {
             return false;
         }
-        if(word.isEmpty()){
-            if(!node.isWord){
-                return false;
-            }else{
-                return true;
-            }
+        if (word.isEmpty()) {
+            return node.isWord;
         }
-        index = (int) word.charAt(0) - (int) 'a';
-        return check(word.substring(1), node.children[index]);
+        return check(word.substring(1), node.children[(int) word.charAt(0) - (int) 'a']);
     }
 
     /**
@@ -220,17 +206,16 @@ public class PrefixTree implements Dictionary {
     private boolean checkPrefix(String prefix, Node node) {
         // FILL IN CODE:
         // Must be recursive
-        if(prefix.isEmpty()){
+        if (prefix.isEmpty()) {
             return true;
         }
-        if(prefix.charAt(0) >= 'a'){
-            if(node.children[(int) prefix.charAt(0) - (int) 'a'] == null){
+        if (prefix.charAt(0) >= 'a') {
+            if (node.children[(int) prefix.charAt(0) - (int) 'a'] == null) {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
-
         return checkPrefix(prefix.substring(1), node.children[(int) prefix.charAt(0) - (int) 'a']);
     }
 
@@ -253,20 +238,18 @@ public class PrefixTree implements Dictionary {
         // Print * if isWord is true for the child at index i
         // Append a new line character (you can use System.lineSeparator())
         // Make a recursive call on the same method and append the result to sb
-        for(int i = 0; i < 26; i++){
-            if(node.children[i] != null){
-                for(int j = 0; j < numIndentations; j++){
+        for (int i = 0; i < 26; i++) {
+            if (node.children[i] != null) {
+                for (int j = 0; j < numIndentations; j++) {
                     sb.append(" ");
                 }
                 sb.append((char) ('a' + i));
-                if(node.children[i].isWord){
+                if (node.children[i].isWord) {
                     sb.append('*');
                 }
                 sb.append('\n');
-
                 sb.append(toString(node.children[i], numIndentations+1));
             }
-
         }
         return sb.toString();
     }
